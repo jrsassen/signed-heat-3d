@@ -14,6 +14,8 @@ using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
 using std::chrono::milliseconds;
 
+#undef AMGCL_NO_BOOST
+
 #include <amgcl/adapter/eigen.hpp>
 #include <amgcl/amg.hpp>
 #include <amgcl/backend/eigen.hpp>

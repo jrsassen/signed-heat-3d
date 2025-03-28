@@ -69,27 +69,61 @@ else()
 endif()
 
 # == Deps
+find_package(Boost REQUIRED COMPONENTS system filesystem)
+include_directories(${Boost_INCLUDE_DIRS})
+
 add_subdirectory(deps/geometry-central)
-add_subdirectory(deps/polyscope)
+#add_subdirectory(deps/polyscope)
 add_subdirectory(deps/tetgen)
 add_subdirectory(deps/amgcl)
 
+find_package(VTK REQUIRED)
+#include(${VTK_USE_FILE})
+
 # == Build our project stuff
 
-set(SRCS
-  src/signed_heat_tet_solver.cpp
-  src/signed_heat_grid_solver.cpp
-  src/signed_heat_3d.cpp
-  src/main.cpp
-)
+#set(SRCS
+#  src/signed_heat_tet_solver.cpp
+#  src/signed_heat_grid_solver.cpp
+#  src/signed_heat_3d.cpp
+#  src/main.cpp
+#)
+#
+#add_executable(main "${SRCS}")
+#target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+#target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/tetgen/")
+#
+## add the args.hxx project which we use for command line args
+#target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/polyscope/deps/args")
+#target_link_libraries(main geometry-central polyscope tetgen amgcl::amgcl)
+#
+## Add libIGL in header-only mode.
+#target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include")
 
-add_executable(main "${SRCS}")
-target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
-target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/tetgen/")
+add_executable(no_gui
+        src/signed_heat_grid_solver_nps.cpp
+        src/signed_heat_3d.cpp
+        src/no_gui.cpp)
+target_include_directories(no_gui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories(no_gui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/tetgen/")
 
 # add the args.hxx project which we use for command line args
-target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/polyscope/deps/args")
-target_link_libraries(main geometry-central polyscope tetgen amgcl::amgcl)
+target_include_directories(no_gui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/polyscope/deps/args")
+target_link_libraries(no_gui PUBLIC geometry-central tetgen amgcl::amgcl ${VTK_LIBRARIES})
 
 # Add libIGL in header-only mode.
-target_include_directories(main PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include")
+target_include_directories(no_gui PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include")
+
+add_executable(no_gui_direct
+        src/signed_heat_grid_solver_nps_direct.cpp
+        src/signed_heat_3d.cpp
+        src/no_gui.cpp)
+target_include_directories(no_gui_direct PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories(no_gui_direct PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/tetgen/")
+
+# add the args.hxx project which we use for command line args
+target_include_directories(no_gui_direct PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/polyscope/deps/args")
+target_link_libraries(no_gui_direct PUBLIC geometry-central tetgen amgcl::amgcl ${VTK_LIBRARIES})
+
+# Add libIGL in header-only mode.
+target_include_directories(no_gui_direct PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/deps/libigl/include")
